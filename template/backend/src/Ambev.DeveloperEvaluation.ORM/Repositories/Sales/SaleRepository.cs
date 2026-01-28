@@ -1,12 +1,14 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities.Sale;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Sales;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories.Sales;
 
 /// <summary>
 /// Implementation of ISaleRepository using Entity Framework Core
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class SaleRepository : ISaleRepository
 {
     private readonly DefaultContext _context;

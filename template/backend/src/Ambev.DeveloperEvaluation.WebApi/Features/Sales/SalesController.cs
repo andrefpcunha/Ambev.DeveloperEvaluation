@@ -50,7 +50,7 @@ public class SalesController : BaseController
     {
         try
         {
-            _logger.LogInformation("Receiving request to create sale for customer {CustomerName}", request.CustomerName);
+            _logger.LogInformation("Receiving request to create sale for customer {CustomerId}", request.CustomerId);
             var validator = new CreateSaleRequestValidator();
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
@@ -60,7 +60,7 @@ public class SalesController : BaseController
             var command = _mapper.Map<CreateSaleCommand>(request);
             var response = await _mediator.Send(command, cancellationToken);
 
-            _logger.LogInformation("Sale created successfully for customer {CustomerName} with Sale Number: {SaleNumber}", request.CustomerName, response.SaleNumber);
+            _logger.LogInformation("Sale created successfully for customer {CustomerId} with Sale Number: {SaleNumber}", request.CustomerId, response.SaleNumber);
             return Created(string.Empty, new ApiResponseWithData<CreateSaleResponse>
             {
                 Success = true,
@@ -70,7 +70,7 @@ public class SalesController : BaseController
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while creating sale for customer {CustomerName}: {ErrorMessage}", request.CustomerName, ex.Message);
+            _logger.LogError(ex, "Error occurred while creating sale for customer {CustomerId}: {ErrorMessage}", request.CustomerId, ex.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
             {
                 Success = false,

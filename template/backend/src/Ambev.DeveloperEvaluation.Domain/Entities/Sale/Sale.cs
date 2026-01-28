@@ -11,7 +11,7 @@ public class Sale : BaseEntity
     public DateTime SaleDate { get; private set; }
     public Guid CustomerId { get; private set; }
     public Guid BranchId { get; private set; }
-    public decimal TotalAmount { get; private set; }
+    public decimal TotalSaleAmount { get; private set; }
     public bool IsCancelled { get; private set; }
     public List<SaleItem> Items { get; private set; }
     public string CustomerName { get; private set; }
@@ -44,7 +44,7 @@ public class Sale : BaseEntity
 
     private void CalculateTotal()
     {
-        TotalAmount = Items.Sum(i => i.TotalAmount);
+        TotalSaleAmount = Items.Sum(i => i.TotalSaleItemAmount);
     }
     #endregion
 

@@ -1,9 +1,11 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities.Sale;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ambev.DeveloperEvaluation.ORM.Mapping.Sales;
 
+[ExcludeFromCodeCoverage]
 public class SaleConfiguration : IEntityTypeConfiguration<Sale>
 {
     public void Configure(EntityTypeBuilder<Sale> builder)

@@ -8,33 +8,30 @@ public class SaleItem : BaseEntity
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
     public decimal Discount { get; private set; }
-    public decimal TotalAmount { get; private set; }
+    public decimal TotalSaleItemAmount { get; private set; }
     public string ProductName { get; private set; }
 
     
     public SaleItem(Guid productId, string productName, int quantity, decimal unitPrice)
     {
-        if (quantity > 20)
-            throw new InvalidOperationException("Cannot sell more than 20 identical items.");
-
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         UnitPrice = unitPrice;
 
         CalculateDiscount();
-        CalculateTotal();
+        CalculateTotalAmount();
     }
 
     private void CalculateDiscount()
     {
-        if (Quantity >= 10)
+        if (Quantity >= 10 && Quantity <= 20)
         {
-            Discount = 0.20m; // 20OFF
+            Discount = 0.20m;
         }
-        else if (Quantity >= 4)
+        else if (Quantity > 4)
         {
-            Discount = 0.10m; // 10OFF
+            Discount = 0.10m;
         }
         else
         {
@@ -42,9 +39,9 @@ public class SaleItem : BaseEntity
         }
     }
 
-    private void CalculateTotal()
+    private void CalculateTotalAmount()
     {
         var grossAmount = Quantity * UnitPrice;
-        TotalAmount = grossAmount - (grossAmount * Discount);
+        TotalSaleItemAmount = grossAmount - (grossAmount * Discount);
     }
 }

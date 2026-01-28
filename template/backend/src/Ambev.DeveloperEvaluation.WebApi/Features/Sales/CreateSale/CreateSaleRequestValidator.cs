@@ -25,6 +25,6 @@ public class CreateSaleItemRequestValidator : AbstractValidator<CreateSaleItemRe
         RuleFor(x => x.Quantity).GreaterThan(0).LessThanOrEqualTo(20)
                                 .WithMessage("Quantity must be between 1 and 20.");
         RuleFor(x => x.UnitPrice).GreaterThan(0)
-                                .WithMessage("UnitPrice must be > 0.");
+                                .WithMessage("UnitPrice must be greater than 0.");
     }
 }

@@ -17,19 +17,13 @@ public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
 
         RuleFor(x => x.Items)
             .NotEmpty().WithMessage("The sale must contain at least one item.")
-            .Must(items => items.Count > 0).WithMessage("The sale must have at least one product.");
+            .Must(items => items.Count > 0).WithMessage("The sale must have at least one item.");
 
         RuleForEach(x => x.Items).SetValidator(new CreateSaleItemValidator());
-
-        RuleFor(x => x.Items)
-            .Must(HaveValidQuantitiesPerProduct)
-            .WithMessage("The total quantity for each identical product cannot exceed 20 units.");
     }
 
     private bool HaveValidQuantitiesPerProduct(List<CreateSaleItemDto> items)
     {
-        if (items == null) return true;
-
         var totalsByProduct = items
             .GroupBy(i => i.ProductId)
             .Select(g => new { ProductId = g.Key, TotalQuantity = g.Sum(i => i.Quantity) });
@@ -49,7 +43,7 @@ public class CreateSaleItemValidator : AbstractValidator<CreateSaleItemDto>
 
         RuleFor(x => x.Quantity)
             .GreaterThan(0).WithMessage("Quantity must be greater than 0.")
-            .LessThanOrEqualTo(20).WithMessage("Quantity for a single item entry cannot exceed 20.");
+            .LessThanOrEqualTo(20).WithMessage("Quantity for a item entry cannot exceed 20.");
 
         RuleFor(x => x.UnitPrice)
             .GreaterThan(0).WithMessage("Unit price must be greater than 0.");

@@ -15,7 +15,7 @@ public class CreateSaleResult
     /// This response contains the Business unique identifier of the newly created sale
     /// </remarks>
     public string SaleNumber { get; set; }
-    public decimal TotalAmount { get; set; }
+    public decimal TotalSaleAmount { get; set; }
     public DateTime SaleDate { get; set; }
     public string CustomerName { get; set; }
     public string BranchName { get; set; }

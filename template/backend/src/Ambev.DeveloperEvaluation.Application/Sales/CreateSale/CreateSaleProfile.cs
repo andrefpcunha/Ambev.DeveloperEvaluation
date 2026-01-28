@@ -1,9 +1,11 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Entities.Sale;
 using AutoMapper;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
+[ExcludeFromCodeCoverage]
 public class CreateSaleProfile : Profile
 {
     public CreateSaleProfile()
