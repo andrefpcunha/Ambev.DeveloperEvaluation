@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Common.Validation;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Dtos;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
@@ -9,7 +10,7 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     public string CustomerName { get; set; }
     public Guid BranchId { get; set; }
     public string BranchName { get; set; }
-    public List<CreateSaleItemDto> Items { get; set; } = new();
+    public List<SaleItemDto> Items { get; set; } = new();
 
     public ValidationResultDetail Validate()
     {

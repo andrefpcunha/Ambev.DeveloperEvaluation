@@ -55,7 +55,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<decimal>("TotalAmount")
+                    b.Property<decimal>("TotalSaleAmount")
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
@@ -84,12 +84,12 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("SaleId")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("TotalAmount")
+                    b.Property<decimal>("TotalSaleItemAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UnitPrice")

@@ -1,6 +1,6 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+﻿namespace Ambev.DeveloperEvaluation.Application.Sales.Dtos;
 
-public class CreateSaleItemDto
+public class SaleItemDto
 {
     public Guid ProductId { get; set; }
     public string ProductName { get; set; }

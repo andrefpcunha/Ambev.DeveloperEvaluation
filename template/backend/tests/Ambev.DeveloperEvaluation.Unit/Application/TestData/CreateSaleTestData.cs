@@ -1,4 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Dtos;
 using Bogus;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application.TestData;
@@ -7,7 +8,7 @@ public static class CreateSaleTestData
 {
     public static CreateSaleCommand GenerateCreateSaleCommand(int qtyValue, int qtyItems)
     {
-        var itemFaker = new Faker<CreateSaleItemDto>()
+        var itemFaker = new Faker<SaleItemDto>()
             .RuleFor(x => x.ProductId, f => f.Random.Guid())
             .RuleFor(x => x.ProductName, f => f.Commerce.ProductName())
             .RuleFor(x => x.Quantity, f => qtyValue)

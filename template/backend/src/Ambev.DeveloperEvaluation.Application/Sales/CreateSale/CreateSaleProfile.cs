@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Dtos;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Entities.Sale;
 using AutoMapper;
 using System.Diagnostics.CodeAnalysis;
@@ -13,7 +14,7 @@ public class CreateSaleProfile : Profile
         CreateMap<CreateSaleCommand, Sale>()
             .ConstructUsing(src => new Sale(src.CustomerId, src.CustomerName, src.BranchId, src.BranchName));
         
-        CreateMap<CreateSaleItemDto, SaleItem>()
+        CreateMap<SaleItemDto, SaleItem>()
             .ConstructUsing(src => new SaleItem(src.ProductId, src.ProductName, src.Quantity, src.UnitPrice));
         
         CreateMap<Sale, CreateSaleResult>();

@@ -14,7 +14,7 @@ public class SaleItemConfiguration : IEntityTypeConfiguration<SaleItem>
         builder.HasKey(u => u.Id);
         builder.Property(si => si.ProductId).IsRequired();
         builder.Property(si => si.ProductName).IsRequired().HasMaxLength(100);
-        builder.Property(si => si.Quantity).IsRequired();
+        builder.Property(si => si.Quantity).IsRequired().HasColumnType("int");
         builder.Property(si => si.UnitPrice).IsRequired().HasColumnType("decimal(18,2)");
         builder.Property(si => si.Discount).IsRequired().HasColumnType("decimal(18,2)");
         builder.Property(si => si.TotalSaleItemAmount).IsRequired().HasColumnType("decimal(18,2)");

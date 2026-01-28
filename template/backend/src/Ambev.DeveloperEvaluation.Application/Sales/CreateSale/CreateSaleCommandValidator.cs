@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Dtos;
+using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
@@ -22,7 +23,7 @@ public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
         RuleForEach(x => x.Items).SetValidator(new CreateSaleItemValidator());
     }
 
-    private bool HaveValidQuantitiesPerProduct(List<CreateSaleItemDto> items)
+    private bool HaveValidQuantitiesPerProduct(List<SaleItemDto> items)
     {
         var totalsByProduct = items
             .GroupBy(i => i.ProductId)
@@ -34,7 +35,7 @@ public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
 /// <summary>
 /// Validator for individual sale items within the command.
 /// </summary>
-public class CreateSaleItemValidator : AbstractValidator<CreateSaleItemDto>
+public class CreateSaleItemValidator : AbstractValidator<SaleItemDto>
 {
     public CreateSaleItemValidator()
     {

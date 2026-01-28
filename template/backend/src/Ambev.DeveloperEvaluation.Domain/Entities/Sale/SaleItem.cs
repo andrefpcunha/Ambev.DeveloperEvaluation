@@ -5,11 +5,11 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 public class SaleItem : BaseEntity
 {
     public Guid ProductId { get; private set; }
+    public string ProductName { get; private set; }
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
     public decimal Discount { get; private set; }
     public decimal TotalSaleItemAmount { get; private set; }
-    public string ProductName { get; private set; }
 
     
     public SaleItem(Guid productId, string productName, int quantity, decimal unitPrice)

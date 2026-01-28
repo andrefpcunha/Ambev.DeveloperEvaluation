@@ -1,6 +1,7 @@
 ﻿//using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 //using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
@@ -91,22 +92,46 @@ public class SalesController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetSale([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        //var request = new GetSaleRequest { Id = id };
-        //var validator = new GetSaleRequestValidator();
-        //var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        //if (!validationResult.IsValid)
-        //    return BadRequest(validationResult.Errors);
-
-        //var command = _mapper.Map<GetSaleCommand>(request.Id);
-        //var response = await _mediator.Send(command, cancellationToken);
-
-        return Ok(new ApiResponseWithData<GetSaleResponse>
+        try
         {
-            Success = true,
-            Message = "Sale retrieved successfully",
-            //Data = _mapper.Map<GetSaleResponse>(response)
-        });
+            _logger.LogInformation("Receiving request searching sale for ID {SaleId}", id);
+            var request = new GetSaleRequest { Id = id };
+            var validator = new GetSaleRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = _mapper.Map<GetSaleQuery>(request.Id);
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if (response is null)
+            {
+                _logger.LogInformation("Sale with ID {id} was not found", id);
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = $"Sale with ID {id} was not found."
+                });
+            }
+
+            _logger.LogInformation("Search completed for sale ID {SaleId}", id);
+            return Ok(new ApiResponseWithData<GetSaleResponse>
+            {
+                Success = true,
+                Message = "Sale retrieved successfully",
+                Data = _mapper.Map<GetSaleResponse>(response)
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while searching sale for ID {SaleId}: {ErrorMessage}", id, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
+            {
+                Success = false,
+                Message = $"An error occurred while searching sale for ID {id}: {ex.Message}."
+            });
+        }
     }
 
     /// <summary>

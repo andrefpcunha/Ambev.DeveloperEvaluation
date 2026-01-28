@@ -1,4 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Dtos;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using AutoMapper;
 
@@ -10,7 +11,7 @@ public class CreateSaleRequestProfile : Profile
     {
         CreateMap<CreateSaleRequest, CreateSaleCommand>();
 
-        CreateMap<CreateSaleItemRequest, CreateSaleItemDto>();
+        CreateMap<CreateSaleItemRequest, SaleItemDto>();
 
         CreateMap<CreateSaleResult, CreateSaleResponse>();
     }
