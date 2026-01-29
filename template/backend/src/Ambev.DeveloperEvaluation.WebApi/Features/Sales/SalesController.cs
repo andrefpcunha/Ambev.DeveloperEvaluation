@@ -1,9 +1,11 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
@@ -255,20 +257,35 @@ public class SalesController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSale([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        //var request = new DeleteSaleRequest { Id = id };
-        //var validator = new DeleteSaleRequestValidator();
-        //var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        //if (!validationResult.IsValid)
-        //    return BadRequest(validationResult.Errors);
-
-        //var command = _mapper.Map<DeleteSaleCommand>(request.Id);
-        //await _mediator.Send(command, cancellationToken);
-
-        return Ok(new ApiResponse
+        try
         {
-            Success = true,
-            Message = "Sale deleted successfully"
-        });
+            _logger.LogInformation("Receiving request to Delete the sale by ID {SaleId}", id);
+            var command = new DeleteSaleCommand(id);
+            await _mediator.Send(command, cancellationToken);
+
+            _logger.LogInformation("Delete completed for sale ID {SaleId}", id);
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Sale deleted successfully"
+            });
+        }
+        catch (KeyNotFoundException k)
+        {
+            return NotFound(new ApiResponse
+            {
+                Success = false,
+                Message = k.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while deleting sale for ID {SaleId}: {ErrorMessage}", id, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
+            {
+                Success = false,
+                Message = $"An error occurred while deleting sale for ID {id}: {ex.Message}."
+            });
+        }
     }
 }
