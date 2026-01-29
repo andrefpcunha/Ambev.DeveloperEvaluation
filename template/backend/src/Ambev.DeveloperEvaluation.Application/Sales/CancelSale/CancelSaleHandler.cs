@@ -31,6 +31,7 @@ public class CancelSaleHandler : IRequestHandler<CancelSaleCommand, CancelSaleRe
         sale = await _saleRepository.UpdateAsync(sale, cancellationToken);
 
         var result = _mapper.Map<CancelSaleResult>(sale);
+        _logger.LogInformation("Sending event [SaleModified] for Sale ID {Id}", command.Id);
         _logger.LogInformation("Finishing CancelSaleCommand for Sale ID {Id}", command.Id);
         return result;
     }

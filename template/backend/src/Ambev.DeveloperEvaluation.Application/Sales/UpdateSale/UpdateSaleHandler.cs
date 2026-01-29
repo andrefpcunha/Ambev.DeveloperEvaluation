@@ -41,6 +41,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         sale.ToUpdate(command.CustomerId, command.CustomerName, command.BranchId, command.BranchName, itemsToUpdate);
 
         await _saleRepository.UpdateAsync(sale, cancellationToken);
+        _logger.LogInformation("Sending event [SaleModified] for Sale ID {Id}", command.Id);
 
         _logger.LogInformation("Finishing UpdateSaleCommand for customer {CustomerId}", command.CustomerId);
         return _mapper.Map<UpdateSaleResult>(sale);

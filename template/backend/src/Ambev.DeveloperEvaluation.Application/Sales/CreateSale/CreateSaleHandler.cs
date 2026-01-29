@@ -37,6 +37,7 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
         }
 
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
+        _logger.LogInformation("Sending event [SaleCreated] for customer {CustomerId}", command.CustomerId);
 
         _logger.LogInformation("Finishing CreateSaleCommand for customer {CustomerId}", command.CustomerId);
         return _mapper.Map<CreateSaleResult>(createdSale);
