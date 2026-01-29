@@ -75,3 +75,13 @@ This section includes links to the detailed documentation for the different API 
 This section describes the overall structure and organization of the project files and directories. 
 
 See [Project Structure](/.doc/project-structure.md)
+
+---
+---
+# About Sale Module
+This section describes about the implementation of the Sale Feature
+
+See more [About Sale Module](/.doc/about-sale-module.md)
+
+---
+---

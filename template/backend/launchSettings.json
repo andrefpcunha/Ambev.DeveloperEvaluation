@@ -5,7 +5,9 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "ambev.developerevaluation.webapi": "StartDebugging"
-      }
+      },
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5555/swagger"
     }
   }
 }
