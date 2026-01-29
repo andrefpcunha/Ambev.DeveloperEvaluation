@@ -61,5 +61,28 @@ public class Sale : BaseEntity
         IsCancelled = true;
     }
 
+    /// <summary>
+    /// Updates sales data and its items, ensuring consistency in calculations.
+    /// </summary>
+    public void ToUpdate(Guid customerId, string customerName, Guid branchId, string branchName, List<(Guid productId, string productName, int quantity, decimal unitPrice)> newItems)
+    {
+        if (IsCancelled)
+            throw new InvalidOperationException("Updating a canceled sale is not allowed.");
+
+        CustomerId = customerId;
+        CustomerName = customerName;
+        BranchId = branchId;
+        BranchName = branchName;
+
+        // (Strategy: Clear e Re-add to force new discounts)
+        Items.Clear();
+        foreach (var item in newItems)
+        {
+            AddItem(item.productId, item.productName, item.quantity, item.unitPrice);
+        }
+
+        CalculateTotal();
+    }
+
     #endregion
 }

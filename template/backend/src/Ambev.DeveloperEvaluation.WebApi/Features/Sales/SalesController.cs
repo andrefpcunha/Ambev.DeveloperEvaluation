@@ -1,17 +1,14 @@
-﻿//using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
-//using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OneOf.Types;
-//using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
-//using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-//using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
@@ -144,23 +141,106 @@ public class SalesController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateSale([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateSale([FromRoute] Guid id, [FromBody] UpdateSaleRequest request, CancellationToken cancellationToken)
     {
-        //var request = new UpdateSaleRequest { Id = id };
-        //var validator = new UpdateSaleRequestValidator();
-        //var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        //if (!validationResult.IsValid)
-        //    return BadRequest(validationResult.Errors);
-
-        //var command = _mapper.Map<UpdateSaleCommand>(request.Id);
-        //await _mediator.Send(command, cancellationToken);
-
-        return Ok(new ApiResponse
+        try
         {
-            Success = true,
-            Message = "Sale updated successfully"
-        });
+            _logger.LogInformation("Receiving request to update the sale by ID {SaleId}", request.Id);
+            var validator = new UpdateSaleRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = _mapper.Map<UpdateSaleCommand>(request);
+            command.Id = id;
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if (response is null)
+            {
+                _logger.LogInformation("Sale with ID {id} was not found", id);
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = $"Sale with ID {id} was not found."
+                });
+            }
+            if (response.IsCancelled)
+            {
+                _logger.LogInformation("Sale with ID {id} is cancelled and cannot be updated", id);
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = $"Sale with ID {id} is cancelled and cannot be updated."
+                });
+            }
+            else
+            {
+                _logger.LogInformation("Update completed for sale ID {SaleId}", id);
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Sale updated successfully"
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while updating sale for ID {SaleId}: {ErrorMessage}", id, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
+            {
+                Success = false,
+                Message = $"An error occurred while updating sale for ID {id}: {ex.Message}."
+            });
+        }
+    }
+
+    /// <summary>
+    /// Cancel a sale by their ID
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to update</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Success response if the sale was updated</returns>
+    [HttpPatch("{id}/Cancel")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CancelSale([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            _logger.LogInformation("Receiving request to Cancel the sale by ID {SaleId}", id);
+            var command = new CancelSaleCommand(id);
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if (response is null)
+            {
+                _logger.LogInformation("Sale with ID {id} was not found to Cancel", id);
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = $"Sale with ID {id} was not found to Cancel."
+                });
+            }
+            else
+            {
+                _logger.LogInformation("Cancel completed for sale ID {SaleId}", id);
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Sale Canceled successfully"
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while Canceling sale for ID {SaleId}: {ErrorMessage}", id, ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
+            {
+                Success = false,
+                Message = $"An error occurred while Canceling sale for ID {id}: {ex.Message}."
+            });
+        }
     }
 
     /// <summary>
